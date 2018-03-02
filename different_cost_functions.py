@@ -25,12 +25,12 @@ def gradient_descent (X_train, y_train, X_test, y_test, alpha):
     n = X_train.shape[1]
     theta = np.zeros (n)
     # print ()
-    error = calculate_rmse (X_test, y_test, theta)
     for i in range (num_iterations):
         delta = (np.matmul (np.matmul (X_train, theta) - y_train, X_train)) / m
         theta = theta - alpha * delta
-        error = calculate_rmse(X_test, y_test, theta)
-        
+
+    error = calculate_rmse(X_test, y_test, theta)
+
     return theta, error
 
 def mean_absolute_error (X, y, theta):
@@ -47,8 +47,8 @@ def gradient_descent_with_mae (X_train, y_train, X_test, y_test, alpha):
     m = X_train.shape[0]
     n = X_train.shape[1]
     theta = np.zeros (n)
-    
-    error = calculate_rmse (X_test, y_test, theta)
+
+    # error = calculate_rmse (X_test, y_test, theta)
     for i in range (num_iterations):
         tmp = np.matmul (X_train, theta) > y_train
         oneOrMOne = []
@@ -59,21 +59,23 @@ def gradient_descent_with_mae (X_train, y_train, X_test, y_test, alpha):
                 oneOrMOne.append (-1)
         delta = np.matmul (oneOrMOne, X_train) / (2 * m)
         theta = theta - alpha * delta
-        error = calculate_rmse (X_test, y_test, theta)
-    
+
+    error = calculate_rmse (X_test, y_test, theta)
+
     return theta, error
 
 def gradient_descent_with_mce (X_train, y_train, X_test, y_test, alpha):
     m = X_train.shape[0]
     n = X_train.shape[1]
     theta = np.zeros (n)
-    
-    error = calculate_rmse (X_test, y_test, theta)
+
+    # error = calculate_rmse (X_test, y_test, theta)
     for i in range (num_iterations):
         delta = (np.matmul (np.square (np.matmul (X_train, theta) - y_train), X_train)) * (3 / (2 * m))
         theta = theta - alpha * delta
-        error = calculate_rmse(X_test, y_test, theta)
-        
+
+    error = calculate_rmse(X_test, y_test, theta)
+
     return theta, error
 
 # Reading data
@@ -111,7 +113,7 @@ y_test = np.zeros (shape = len_test, dtype = float)
 for i in range (len_train):
     X_train[i] = X[l1[i]]
     y_train[i] = y[l1[i]]
-    
+
 for i in range (len_test):
     X_test[i] = X[l3[i]]
     y_test[i] = y[l3[i]]
@@ -140,14 +142,21 @@ X_test = np.concatenate((np.ones(len_test)[:, np.newaxis], X_test), axis=1)
 # theta = np.zeros (X_train.shape[1])
 # learning rate
 alphas = np.linspace (0.001, 0.05, 50)
-num_iterations = 20000
+num_iterations = 5000
 
 print ('(i) mean absolute error')
 
 rmses = []
+thetas = []
 for alpha in alphas:
+    print (alpha)
     theta, err = gradient_descent_with_mae (X_train, y_train, X_test, y_test, alpha)
+    thetas.append (theta)
     rmses.append (err)
+
+for i in range (len (alphas)):
+    print ('Alpha: ', alphas[i])
+    print ('Theta: ', thetas[i])
 
 plt.plot (alphas, rmses)
 plt.title ('Linear Regression with mean absolute error')
@@ -158,9 +167,16 @@ plt.show ()
 print ('(ii) mean squared error')
 
 rmses = []
+thetas = []
 for alpha in alphas:
+    print (alpha)
     theta, err = gradient_descent (X_train, y_train, X_test, y_test, alpha)
+    thetas.append (theta)
     rmses.append (err)
+
+for i in range (len (alphas)):
+    print ('Alpha: ', alphas[i])
+    print ('Theta: ', thetas[i])
 
 plt.plot (alphas, rmses)
 plt.title ('Linear Regression with mean squared error')
@@ -171,9 +187,16 @@ plt.show ()
 print ('(iii) mean cubic error')
 
 rmses = []
+thetas = []
 for alpha in alphas:
+    print (alpha)
     theta, err = gradient_descent (X_train, y_train, X_test, y_test, alpha)
+    thetas.append (theta)
     rmses.append (err)
+
+for i in range (len (alphas)):
+    print ('Alpha: ', alphas[i])
+    print ('Theta: ', thetas[i])
 
 plt.plot (alphas, rmses)
 plt.title ('Linear Regression with mean cubic error')
